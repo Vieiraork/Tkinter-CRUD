@@ -13,6 +13,7 @@ class Window:
         self.window = Tk()
         self.window.geometry("600x600")
         self.window.title('Registro de Produtos')
+        # Variables for "input" Entry
         self.product = StringVar()
         self.price = StringVar()
         self.id = StringVar()
