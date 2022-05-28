@@ -15,6 +15,7 @@ class Window:
         self.window.title('Registro de Produtos')
         self.product = StringVar()
         self.price = StringVar()
+        self.id = StringVar()
 
         # Label and Entry definition
         product_label = Label(self.window, {'text': 'Produto'})
@@ -31,14 +32,19 @@ class Window:
         # Button declaration
         button = Button(self.window, {'text': 'Cadastrar', 'bg': 'green', 'fg': 'white'},
                         command=lambda: self.save_products(self.product.get(), self.price.get())
-                        if self.product.get() != '' and self.price.get() != '' else "",
+                        if self.product.get() != '' and self.price.get() != '' and self.id.get() == '' else "",
                         width=10)
         button.pack(pady=10)
+        update_button = Button(self.window, {'text': 'Atualizar', 'bg': 'green', 'fg': 'white'},
+                               command=lambda: self.update_produts(self.id.get(), self.product.get(), self.price.get())
+                               if self.product.get() != '' and self.price.get() != '' and self.id.get() != '' else "")
+        update_button.pack()
 
         separator_label2 = Label(self.window, {'text': ''})
         separator_label2.pack({'fill': X})
 
         self.treeview = ttk.Treeview(self.window)
+        self.treeview.bind('<Double-1>', self.populate_variables)
 
         table_label = Label(self.window, {'text': 'Tabela de produtos'})
         table_label.pack()
@@ -80,6 +86,27 @@ class Window:
                 self.populate_table()
             else:
                 showerror('Falha na exclusão', 'Por algum motivo não foi possível excluir o item selecionado.')
+
+    def update_produts(self, id: str, produto: str, preco: str) -> None:
+        if self.validate_price(preco):
+            if self.products.update(int(id), produto, self.__new_price):
+                showinfo('Produto Atualizado', 'Produto foi atualizado com sucesso.')
+                self.id.set('')
+                self.product.set('')
+                self.price.set('')
+                self.populate_table()
+            else:
+                showerror('Falha ao atualizar', 'Por algum motivo não foi possível excluir o item selecionado.')
+
+    def populate_variables(self, event) -> None:
+        table_data = self.treeview.selection()
+        print(table_data)
+        if len(table_data) > 0:
+            produtos = self.products.select_by_id(int(table_data[0]))
+            print(produtos)
+            self.id.set(produtos[0][0])
+            self.product.set(produtos[0][1])
+            self.price.set(produtos[0][2])
 
     def validate_price(self, price: str) -> bool:
         price = price.replace(',', '.')
