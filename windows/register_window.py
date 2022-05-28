@@ -36,13 +36,13 @@ class Window:
                         if self.product.get() != '' and self.price.get() != '' and self.id.get() == '' else "",
                         width=10)
         button.pack(pady=10)
+
+        # Button for update products
         update_button = Button(self.window, {'text': 'Atualizar', 'bg': 'green', 'fg': 'white'},
                                command=lambda: self.update_produts(self.id.get(), self.product.get(), self.price.get())
-                               if self.product.get() != '' and self.price.get() != '' and self.id.get() != '' else "")
-        update_button.pack()
-
-        separator_label2 = Label(self.window, {'text': ''})
-        separator_label2.pack({'fill': X})
+                               if self.product.get() != '' and self.price.get() != '' and self.id.get() != '' else "",
+                               width=10)
+        update_button.pack(pady=10)
 
         self.treeview = ttk.Treeview(self.window)
         self.treeview.bind('<Double-1>', self.populate_variables)
@@ -84,6 +84,9 @@ class Window:
         if len(table_data) > 0:
             if self.products.delete(int(table_data[0])):
                 showinfo('Produto excluido', 'Produto excluído com sucesso.')
+                self.id.set('')
+                self.product.set('')
+                self.price.set('')
                 self.populate_table()
             else:
                 showerror('Falha na exclusão', 'Por algum motivo não foi possível excluir o item selecionado.')
