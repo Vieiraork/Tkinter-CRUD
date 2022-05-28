@@ -104,10 +104,8 @@ class Window:
 
     def populate_variables(self, event) -> None:
         table_data = self.treeview.selection()
-        print(table_data)
         if len(table_data) > 0:
             produtos = self.products.select_by_id(int(table_data[0]))
-            print(produtos)
             self.id.set(produtos[0][0])
             self.product.set(produtos[0][1])
             self.price.set(produtos[0][2])
